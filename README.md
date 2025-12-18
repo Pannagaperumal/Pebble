@@ -4,19 +4,6 @@
 
 [Features](#features) • [Installation](#installation) • [Usage](#usage) • [Roadmap](#next-steps)
 
-## Architecture
-
-```mermaid
-graph LR
-    Source["Source Code (.pb)"] --> Lexer["Lexer (Lexical Analysis)"]
-    Lexer --> Tokens["Tokens"]
-    Tokens --> Parser["Parser (Syntactic Analysis)"]
-    Parser --> AST["Abstract Syntax Tree (AST)"]
-    AST --> Evaluator["Evaluator (Execution)"]
-    Evaluator --> Objects["Objects & Environment"]
-    Objects --> Output["Result / Side Effects"]
-```
-
 ## Features
 - **Variables**: `var x = 10;`
 - **Data Types**: Integers, Booleans, Strings, Functions, Arrays, Hash Maps.
@@ -32,6 +19,19 @@ git clone https://github.com/yourusername/pebble.git
 cd pebble
 ```
 
+
+## Architecture
+
+```mermaid
+graph TD
+    Source["Source Code (.pb)"] --> Lexer["Lexer (Lexical Analysis)"]
+    Lexer --> Tokens["Tokens"]
+    Tokens --> Parser["Parser (Syntactic Analysis)"]
+    Parser --> AST["Abstract Syntax Tree (AST)"]
+    AS["Abstract Syntax Tree (AST)"] --> Evaluator["Evaluator (Execution)"]
+    Evaluator --> Objects["Objects & Environment"]
+    Objects --> Output["Result / Side Effects"]
+```
 ## Usage
 
 ### USE THE EXECUTABLE (directly GO not required)
