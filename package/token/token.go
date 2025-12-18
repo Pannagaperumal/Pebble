@@ -38,9 +38,6 @@ const (
 	LBRACE = "{"
 	RBRACE = "}"
 
-	LBRACKET = "["
-	RBRACKET = "]"
-
 	// Keywords
 	FUNCTION = "FUNCTION"
 	VAR      = "VAR"

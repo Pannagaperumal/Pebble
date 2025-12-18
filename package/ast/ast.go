@@ -25,11 +25,6 @@ type Program struct {
 	Statements []Statement
 }
 
-type ArrayLiteral struct {
-	Token    token.Token // the '[' token
-	Elements []Expression
-}
-
 func (p *Program) TokenLiteral() string {
 	if len(p.Statements) > 0 {
 		return p.Statements[0].TokenLiteral()
@@ -268,19 +263,5 @@ func (we *WhileExpression) String() string {
 	out.WriteString(we.Condition.String())
 	out.WriteString(" ")
 	out.WriteString(we.Body.String())
-	return out.String()
-}
-
-func (al *ArrayLiteral) expressionNode()      {}
-func (al *ArrayLiteral) TokenLiteral() string { return al.Token.Literal }
-func (al *ArrayLiteral) String() string {
-	var out bytes.Buffer
-	elements := []string{}
-	for _, el := range al.Elements {
-		elements = append(elements, el.String())
-	}
-	out.WriteString("[")
-	out.WriteString(strings.Join(elements, ", "))
-	out.WriteString("]")
 	return out.String()
 }
