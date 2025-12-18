@@ -4,7 +4,7 @@ Pebble is a simple, interpreted programming language written in Go. It features 
 
 ## Features
 - **Variables**: `var x = 10;`
-- **Data Types**: Integers, Booleans, Strings, Functions.
+- **Data Types**: Integers, Booleans, Strings, Functions, Arrays
 - **Control Flow**: `if/else`, `while`.
 - **Functions**: `fn(x) { return x + 1; }`
 - **Built-ins**: `print()`, `len()`.

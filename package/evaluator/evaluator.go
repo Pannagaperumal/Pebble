@@ -95,8 +95,14 @@ func Eval(node ast.Node, env *object.Environment) object.Object {
 
 	case *ast.WhileExpression:
 		return evalWhileExpression(node, env)
-	}
 
+	case *ast.ArrayLiteral:
+		elements := evalExpressions(node.Elements, env)
+		if len(elements) == 1 && isError(elements[0]) {
+			return elements[0]
+		}
+		return &object.Array{Elements: elements}
+	}
 	return nil
 }
 
