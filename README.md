@@ -1,11 +1,26 @@
-# Pebble Interpreter
+# 🪨 Pebble
 
-Pebble is a simple, interpreted programming language written in Go. It features a C-like syntax, first-class functions, and a REPL.
+**Pebble** is a lightweight, interpreted programming language designed for simplicity and extensibility. Built from the ground up in Go, it offers a familiar C-like syntax with powerful modern features.
+
+[Features](#features) • [Installation](#installation) • [Usage](#usage) • [Roadmap](#next-steps)
+
+## Architecture
+
+```mermaid
+graph LR
+    Source["Source Code (.pb)"] --> Lexer["Lexer (Lexical Analysis)"]
+    Lexer --> Tokens["Tokens"]
+    Tokens --> Parser["Parser (Syntactic Analysis)"]
+    Parser --> AST["Abstract Syntax Tree (AST)"]
+    AST --> Evaluator["Evaluator (Execution)"]
+    Evaluator --> Objects["Objects & Environment"]
+    Objects --> Output["Result / Side Effects"]
+```
 
 ## Features
 - **Variables**: `var x = 10;`
-- **Data Types**: Integers, Booleans, Strings, Functions, Arrays
-- **Control Flow**: `if/else`, `while`.
+- **Data Types**: Integers, Booleans, Strings, Functions, Arrays, Hash Maps.
+- **Control Flow**: `if/else`, `while`, `for`.
 - **Functions**: `fn(x) { return x + 1; }`
 - **Built-ins**: `print()`, `len()`.
 - **Embeddable**: Can be used as a scripting language for Go applications.
@@ -20,7 +35,9 @@ cd pebble
 ## Usage
 
 ### USE THE EXECUTABLE (directly GO not required)
+```bash
 ./pebble examples/demo.pb
+```
 
 ### REPL
 Start the interactive Read-Eval-Print-Loop:
@@ -39,8 +56,7 @@ go run cmd/pebble/main.go examples/demo.pb
 Pebble is evolving! Here are the planned functionalities to transform it into a mid-level programming language:
 
 ### Core Language Features
-- **Arrays & Hashes**: Support for ordered lists and key-value pair data structures.
-- **Advanced Control Flow**: `for` loops, `switch` statements, and `break`/`continue` support.
+- **Advanced Control Flow**: `switch` statements, and `break`/`continue` support.
 - **Structs & Methods**: Custom data types and object-oriented patterns for better data modeling.
 - **Modules & Imports**: Support for multi-file projects and code reuse.
 
