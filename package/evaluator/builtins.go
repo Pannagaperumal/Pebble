@@ -14,6 +14,16 @@ var Builtins = map[string]*object.Builtin{
 			return NULL
 		},
 	},
+	"str": {
+		Fn: func(args ...object.Object) object.Object {
+			if len(args) != 1 {
+				return newError("wrong number of arguments. got=%d, want=1",
+					len(args))
+			}
+
+			return &object.String{Value: args[0].Inspect()}
+		},
+	},
 	"len": {
 		Fn: func(args ...object.Object) object.Object {
 			if len(args) != 1 {
