@@ -137,7 +137,7 @@ func (p *Parser) ParseProgram() *ast.Program {
 
 func (p *Parser) parseStatement() ast.Statement {
 	switch p.curToken.Type {
-	case token.VAR:
+	case token.LET, token.VAR: // Support both let and var for variable declarations
 		return p.parseLetStatement()
 	case token.RETURN:
 		return p.parseReturnStatement()

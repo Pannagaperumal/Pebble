@@ -63,7 +63,7 @@ Pebble is evolving! Here are the planned functionalities to transform it into a 
 ### Advanced Capabilities
 - **Concurrency**: Lightweight threads (fibers/goroutines) and channels for parallel execution.
 - **FFI (Foreign Function Interface)**: Ability to call Go or C functions directly from Pebble.
-- **Bytecode Compiler & VM**: Performance optimizations through compilation to bytecode and a dedicated Virtual Machine.
+- **Bytecode Compiler & VM**: Performance optimizations through compilation to bytecode and a dedicated stack-based Virtual Machine. This approach can provide 10-50x performance improvements over the current tree-walk interpreter by reducing overhead and enabling better optimization opportunities. The implementation will maintain the existing AST evaluator logic while adding a compilation step to bytecode.
 
 ### Ecosystem & Tooling
 - **Standard Library**: Expanded built-in functions for Networking (HTTP), JSON/YAML parsing, and Math utilities.

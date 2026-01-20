@@ -68,15 +68,17 @@ func RunFile(filename string, out io.Writer) {
 
 	env := object.NewEnvironment()
 	evaluator.RegisterBuiltins(env)
+
+	// Evaluate the program
 	evaluated := evaluator.Eval(program, env)
-	if evaluated != nil && evaluated.Type() != object.NULL_OBJ {
-		// Only print if it's not null, or maybe don't print at all for scripts unless explicit print?
-		// Scripts usually only print explicit output.
-		// But for now let's match REPL behavior but maybe suppress result printing if it's just a statement?
-		// Actually, standard interpreters don't print the result of the last expression unless it's a REPL.
-		// So we should probably NOT print `evaluated.Inspect()` here unless we want to debug.
-		// `print()` function handles output.
+
+	// Check for evaluation errors
+	if evaluated != nil && evaluated.Type() == object.ERROR_OBJ {
+		fmt.Fprintf(out, "Runtime error: %s\n", evaluated.Inspect())
 	}
+
+	// Note: We don't print the result of the last expression for script files
+	// as it's the standard behavior to only show explicit print statements
 }
 
 func openFile(filename string) io.Reader {
