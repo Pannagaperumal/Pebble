@@ -1,8 +1,25 @@
 # 🪨 Pebble
 
-**Pebble** is a lightweight, interpreted programming language designed for simplicity and extensibility. Built from the ground up in Go, it offers a familiar C-like syntax with powerful modern features.
+**Pebble** is a lightweight, interpreted programming language designed for simplicity and extensibility. Built from the ground up in Go. It is designed for **simplicity, performance, and embeddability**. Pebble aims to evolve into a **high-performance embeddable scripting and configuration language for Go applications**.
 
-[Features](#features) • [Installation](#installation) • [Usage](#usage) • [Roadmap](#next-steps)
+---
+
+## 🚀 Vision
+
+Pebble is not just another scripting language.
+
+It is being designed to become:
+
+> A fast, embeddable scripting and configuration engine for Go systems.
+
+Long-term goals include:
+- High-performance bytecode VM
+- Safe sandbox execution
+- First-class Go embedding API
+- Modular architecture
+- Clean and expressive syntax
+
+Curious about how its fast (read: docs/vm_architecture.md)
 
 ## Features
 - **Variables**: `var x = 10;`
@@ -12,6 +29,14 @@
 - **Built-ins**: `print()`, `len()`.
 - **Embeddable**: Can be used as a scripting language for Go applications.
 
+### When to Choose Pebble VM
+1. **Embedded Systems**: Small footprint and fast startup
+2. **High-performance Scripting**: When speed matters
+3. **Go Integration**: Seamless embedding in Go applications
+4. **Resource-constrained Environments**: Low memory/CPU usage
+5. **Predictable Performance**: No JIT warm-up or GC pauses
+
+
 ## Installation
 Ensure you have Go installed.
 ```bash
@@ -19,22 +44,17 @@ git clone https://github.com/yourusername/pebble.git
 cd pebble
 ```
 
-
 ## Architecture
-
 ```mermaid
-graph TD
-    Source["Source Code (.pb)"] --> Lexer["Lexer (Lexical Analysis)"]
-    Lexer --> Tokens["Tokens"]
-    Tokens --> Parser["Parser (Syntactic Analysis)"]
-    Parser --> AST["Abstract Syntax Tree (AST)"]
-    AS["Abstract Syntax Tree (AST)"] --> Evaluator["Evaluator (Execution)"]
-    Evaluator --> Objects["Objects & Environment"]
-    Objects --> Output["Result / Side Effects"]
+graph LR
+    A[Source Code] -->|Lexer| B[Tokens]
+    B -->|Parser| C[AST]
+    C -->|Compiler| D[Bytecode]
+    D -->|VM| E[Execution]
 ```
 ## Usage
 
-### USE THE EXECUTABLE (directly GO not required)
+### USE THE EXECUTABLE (directly Go not required)
 ```bash
 ./pebble examples/demo.pb
 ```
