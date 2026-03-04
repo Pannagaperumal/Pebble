@@ -1,4 +1,4 @@
-# Pebble VM: High-Performance Stack-Based Virtual Machine
+# Pebble VM: Stack-Based Virtual Machine
 
 ## Overview
 Pebble's Virtual Machine (VM) is a high-performance, stack-based bytecode interpreter designed to execute Pebble programs efficiently. This document explains the architecture, design decisions, and performance characteristics that make it superior to traditional tree-walking interpreters.
@@ -37,15 +37,7 @@ Pebble compiles source code into a compact bytecode format consisting of:
 - **Constants Pool**: Shared constants used throughout the program
 - **Symbol Table**: Manages variables and scopes
 
-```mermaid
-graph TD
-    A[Source Code] -->|Lexer| B[Tokens]
-    B -->|Parser| C[AST]
-    C -->|Compiler| D[Bytecode]
-    D -->|VM| E[Execution]
-```
-
-### 2. Virtual Machine Core
+### 3. Virtual Machine Core
 - **Register-based operations** for optimal performance
 - **Stack-based execution** for expression evaluation
 - **Efficient memory management** with pre-allocated stacks
@@ -61,12 +53,12 @@ graph TD
 | Variable Lookup  | O(depth)     | O(1)     | Faster access |
 
 ### 2. Execution Speed
-For the expression `1 + 2 * 3 - 4 / 2` evaluated 1,000,000 times:
+For the expression `1 + 2 * 3 - 4 / 2` evaluated 10,00,000 times:
 
 | Implementation  | Time (ms) | Memory (MB) | Allocations |
 |-----------------|-----------|-------------|-------------|
-| Tree-walking    | 1,200     | 45          | 8,000,000   |
-| Stack VM        | 45        | 12          | 1,000,000   |
+| Tree-walking    | 1,200     | 45          | 80,00,000   |
+| Stack VM        | 45        | 12          | 10,00,000   |
 | Improvement     | 26x faster| 3.75x less  | 8x fewer    |
 
 ### 3. Key Optimizations
@@ -89,18 +81,18 @@ For the expression `1 + 2 * 3 - 4 / 2` evaluated 1,000,000 times:
 
 ### Performance Comparison Table (Lower is Better)
 
-| Feature | Pebble VM | Python 3.10 | Node.js 18 | Lua 5.4 | Ruby 3.1 |
-|---------|-----------|-------------|------------|---------|----------|
-| **Execution Model** | Stack-based VM | Stack-based VM | JIT (V8) | Register VM | Stack-based VM |
-| **Startup Time** | ⚡ 5ms | 🐢 50ms | 🐢 80ms | ⚡ 3ms | 🐢 100ms |
-| **Memory Usage** | 8-12 MB | 20-30 MB | 40-60 MB | 5-8 MB | 25-40 MB |
-| **Fibonacci(30)*** | 120ms | 450ms | 180ms | 150ms | 600ms |
-| **Loop Performance** | ⭐⭐⭐⭐⭐ | ⭐⭐ | ⭐⭐⭐⭐ | ⭐⭐⭐⭐ | ⭐⭐ |
-| **String Handling** | ⭐⭐⭐ | ⭐⭐⭐⭐ | ⭐⭐⭐⭐⭐ | ⭐⭐⭐ | ⭐⭐⭐⭐ |
-| **Concurrency** | Goroutines | GIL-limited | Event Loop | Coroutines | GIL-limited |
-| **Ease of Embedding** | ⭐⭐⭐⭐⭐ (Go) | ⭐⭐⭐ | ⭐⭐ | ⭐⭐⭐⭐ | ⭐⭐ |
-| **GC Pause Time** | <1ms | 10-100ms | 1-5ms | <1ms | 10-50ms |
-| **Binary Size** | 5-8MB | N/A | N/A | 200-500KB | N/A |
+| Feature | Pebble VM | Python 3.10 | Node.js 18 | Lua 5.4 |
+|---------|-----------|-------------|------------|---------|
+| **Execution Model** | Stack-based VM | Stack-based VM | JIT (V8) | Register VM |
+| **Startup Time** | ⚡ 5ms | 🐢 50ms | 🐢 80ms | ⚡ 3ms |
+| **Memory Usage** | 8-12 MB | 20-30 MB | 40-60 MB | 5-8 MB |
+| **Fibonacci(30)*** | 120ms | 450ms | 180ms | 150ms |
+| **Loop Performance** | ⭐⭐⭐⭐⭐ | ⭐⭐ | ⭐⭐⭐⭐ | ⭐⭐⭐⭐ |
+| **String Handling** | ⭐⭐⭐ | ⭐⭐⭐⭐ | ⭐⭐⭐⭐⭐ | ⭐⭐⭐ |
+| **Concurrency** | Goroutines | GIL-limited | Event Loop | Coroutines |
+| **Ease of Embedding** | ⭐⭐⭐⭐⭐ (Go) | ⭐⭐⭐ | ⭐⭐ | ⭐⭐⭐⭐ |
+| **GC Pause Time** | <1ms | 10-100ms | 1-5ms | <1ms |
+| **Binary Size** | 5-8MB | N/A | N/A | 200-500KB |
 
 > *Lower execution time is better. Tested on Intel i7-11800H, 32GB RAM
 
@@ -109,11 +101,9 @@ For the expression `1 + 2 * 3 - 4 / 2` evaluated 1,000,000 times:
 #### 1. Python
 - **2-4x faster** for CPU-bound operations
 - **Lower memory footprint** (60% less than CPython)
-- **True parallelism** (no GIL limitations)
-- **Faster startup time** (10x faster)
+- **True parallelism  & Faster startup time** (no GIL limitations & 10x faster)
 
 #### 2. JavaScript (Node.js)
-- **More predictable performance** (no JIT warm-up)
 - **Lower memory usage** (4-5x less)
 - **Better for embedded systems** (smaller binary)
 - **Synchronous by default** (simpler code)
@@ -122,13 +112,6 @@ For the expression `1 + 2 * 3 - 4 / 2` evaluated 1,000,000 times:
 - **Better Go integration** (seamless Goroutine support)
 - **Modern syntax** (compared to Lua's minimalism)
 - **Built-in concurrency** (vs Lua's coroutines)
-- **Stronger typing** (reduces runtime errors)
-
-#### 4. Ruby
-- **3-5x faster** execution
-- **Lower memory usage** (70% less)
-- **Better concurrency model** (no GIL)
-- **Faster startup** (20x faster)
 
 ### When to Choose Pebble VM
 1. **Embedded Systems**: Small footprint and fast startup
