@@ -1,8 +1,8 @@
 package evaluator
 
 import (
-	"pebble/ast"
-	"pebble/object"
+	"github.com/pannagaperumal/moxy/ast"
+	"github.com/pannagaperumal/moxy/object"
 )
 
 func evalProgram(program *ast.Program, env *object.Environment) object.Object {

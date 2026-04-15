@@ -1,4 +1,4 @@
-package object
+package types
 
 type Closure struct {
 	Fn            *CompiledFunction

@@ -3,7 +3,7 @@ package vm
 import (
 	"encoding/binary"
 	"fmt"
-	"pebble/object"
+	"github.com/pannagaperumal/moxy/object"
 )
 
 func (vm *VM) executeBinaryOperation(op Opcode) error {

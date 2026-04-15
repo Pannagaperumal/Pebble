@@ -3,10 +3,10 @@ package compiler
 import (
 	"fmt"
 
-	"pebble/ast"
-	"pebble/internal/code"
-	"pebble/object"
-	"pebble/internal/symbol"
+	"github.com/pannagaperumal/moxy/ast"
+	"github.com/pannagaperumal/moxy/internal/code"
+	"github.com/pannagaperumal/moxy/object"
+	"github.com/pannagaperumal/moxy/internal/symbol"
 )
 
 type Bytecode struct {

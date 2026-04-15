@@ -1,4 +1,4 @@
-package object
+package types
 
 // CompiledFunction represents a compiled function in the VM
 type CompiledFunction struct {

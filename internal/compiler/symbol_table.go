@@ -1,7 +1,7 @@
 package compiler
 
 import (
-	"pebble/internal/symbol"
+	"github.com/pannagaperumal/moxy/internal/symbol"
 )
 
 // SymbolTable is an alias for the symbol.SymbolTable type

@@ -2,7 +2,7 @@ package ast
 
 import (
 	"bytes"
-	"pebble/internal/token"
+	"github.com/pannagaperumal/moxy/internal/token"
 	"strings"
 )
 

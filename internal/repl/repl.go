@@ -5,10 +5,10 @@ import (
 	"fmt"
 	"io"
 	"os"
-	"pebble/internal/evaluator"
-	"pebble/internal/lexer"
-	"pebble/object"
-	"pebble/internal/parser"
+	"github.com/pannagaperumal/moxy/internal/evaluator"
+	"github.com/pannagaperumal/moxy/internal/lexer"
+	"github.com/pannagaperumal/moxy/object"
+	"github.com/pannagaperumal/moxy/internal/parser"
 )
 
 const PROMPT = ">> "

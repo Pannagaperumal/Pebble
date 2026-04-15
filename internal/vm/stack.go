@@ -1,6 +1,6 @@
 package vm
 
-import "pebble/object"
+import "github.com/pannagaperumal/moxy/object"
 
 func (vm *VM) push(o object.Object) error {
 	if vm.sp >= StackSize {

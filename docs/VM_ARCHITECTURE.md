@@ -1,7 +1,7 @@
-# Pebble VM: Stack-Based Virtual Machine
+# Moxy VM: Stack-Based Virtual Machine
 
 ## Overview
-Pebble's Virtual Machine (VM) is a high-performance, stack-based bytecode interpreter designed to execute Pebble programs efficiently. This document explains the architecture, design decisions, and performance characteristics that make it superior to traditional tree-walking interpreters.
+Moxy's Virtual Machine (VM) is a high-performance, stack-based bytecode interpreter designed to execute Moxy programs efficiently. This document explains the architecture, design decisions, and performance characteristics that make it superior to traditional tree-walking interpreters.
 
 ## Table of Contents
 1. [Architecture Overview](#architecture-overview)
@@ -14,7 +14,7 @@ Pebble's Virtual Machine (VM) is a high-performance, stack-based bytecode interp
 ## Architecture Overview
 
 ### 1. Execution Model
-Pebble is an **interpreted language** that uses a **bytecode virtual machine (VM)** for execution, combining the ease of interpretation with near-native performance. The execution flow is as follows:
+Moxy is an **interpreted language** that uses a **bytecode virtual machine (VM)** for execution, combining the ease of interpretation with near-native performance. The execution flow is as follows:
 
 ```mermaid
 graph LR
@@ -32,7 +32,7 @@ graph LR
 - **Dynamically Typed**: Types are checked at runtime
 
 ### 2. Bytecode Compilation
-Pebble compiles source code into a compact bytecode format consisting of:
+Moxy compiles source code into a compact bytecode format consisting of:
 - **Instructions**: A sequence of opcodes and operands
 - **Constants Pool**: Shared constants used throughout the program
 - **Symbol Table**: Manages variables and scopes
@@ -74,14 +74,14 @@ For the expression `1 + 2 * 3 - 4 / 2` evaluated 10,00,000 times:
 |------------------|-----------|----------------|
 | Python 3.8      | 3.2       | 1x             |
 | Tree-walking     | 28.1      | ~9x slower     |
-| Pebble VM        | 1.4       | ~2.3x faster   |
+| Moxy VM        | 1.4       | ~2.3x faster   |
 | Native Go        | 0.05      | 64x faster     |
 
 ## Language Comparison
 
 ### Performance Comparison Table (Lower is Better)
 
-| Feature | Pebble VM | Python 3.10 | Node.js 18 | Lua 5.4 |
+| Feature | Moxy VM | Python 3.10 | Node.js 18 | Lua 5.4 |
 |---------|-----------|-------------|------------|---------|
 | **Execution Model** | Stack-based VM | Stack-based VM | JIT (V8) | Register VM |
 | **Startup Time** | ⚡ 5ms | 🐢 50ms | 🐢 80ms | ⚡ 3ms |
@@ -113,7 +113,7 @@ For the expression `1 + 2 * 3 - 4 / 2` evaluated 10,00,000 times:
 - **Modern syntax** (compared to Lua's minimalism)
 - **Built-in concurrency** (vs Lua's coroutines)
 
-### When to Choose Pebble VM
+### When to Choose Moxy VM
 1. **Embedded Systems**: Small footprint and fast startup
 2. **High-performance Scripting**: When speed matters
 3. **Go Integration**: Seamless embedding in Go applications
@@ -161,7 +161,7 @@ MUL
 - Work-stealing scheduler for parallel tasks
 
 ## Conclusion
-Pebble's VM achieves near-native performance through:
+Moxy's VM achieves near-native performance through:
 1. Efficient bytecode representation
 2. Optimized stack operations
 3. Minimal runtime overhead

@@ -5,9 +5,9 @@ import (
 	"errors"
 	"fmt"
 
-	"pebble/internal/code"
-	"pebble/internal/compiler"
-	"pebble/object"
+	"github.com/pannagaperumal/moxy/internal/code"
+	"github.com/pannagaperumal/moxy/internal/compiler"
+	"github.com/pannagaperumal/moxy/object"
 )
 
 const StackSize = 2048

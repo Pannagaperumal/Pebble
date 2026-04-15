@@ -1,19 +1,19 @@
-# 🪨 Pebble
+# 🪨 Moxy
 
 **The Scripting Language Go Developers Already Know.**
 
-Pebble is a high-performance, sandboxed scripting language designed specifically for embedding in Go applications. It combines the simplicity of Go with the flexibility of a dynamic scripting engine.
+Moxy is a high-performance, sandboxed scripting language designed specifically for embedding in Go applications. It combines the simplicity of Go with the flexibility of a dynamic scripting engine.
 
 ---
 
-## 🚀 Why Pebble?
+## 🚀 Why Moxy?
 
 If you are a Go developer, you've likely faced the "scripting dilemma":
 *   **Lua** is fast but has `1-based` indexing and non-Go syntax.
 *   **Starlark** is safe but restrictive (no recursion) and Python-based.
 *   **Embedded Go** is powerful but complex to sandbox and heavy.
 
-**Pebble** bridges this gap by providing a **Go-native VM** that uses a syntax you already know.
+**Moxy** bridges this gap by providing a **Go-native VM** that uses a syntax you already know.
 
 ### Core Value Proposition
 - **Go-Like Syntax**: `func`, `var`, `:=`, and `0-based` indexing.
@@ -27,8 +27,8 @@ If you are a Go developer, you've likely faced the "scripting dilemma":
 
 ### In your Go project
 ```go
-import "github.com/yourusername/pebble/package/vm"
-import "github.com/yourusername/pebble/package/compiler"
+import "github.com/yourusername/moxy/package/vm"
+import "github.com/yourusername/moxy/package/compiler"
 
 func main() {
     p := parser.New(lexer.New("x := 10; return x + 5;"))
@@ -47,7 +47,7 @@ func main() {
 
 ### CLI
 ```bash
-./pebble examples/demo.pb
+./moxy examples/demo.pb
 ```
 
 ---
@@ -92,7 +92,7 @@ func process(event) {
 
 ## ⚖️ Comparison
 
-| | Pebble | Lua | Starlark |
+| | Moxy | Lua | Starlark |
 |---|---|---|---|
 | **Syntax** | **Go** | Pascal/C | Python |
 | **Indexing** | **0-based** | 1-based | 0-based |

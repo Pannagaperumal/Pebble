@@ -1,13 +1,13 @@
-# Pebble Design Specification
+# Moxy Design Specification
 
 ## 1. Core Purpose & Value Proposition
 
-**Pebble** is a high-performance, embeddable scripting language for Go applications that feels like a natural extension of Go.
+**Moxy** is a high-performance, embeddable scripting language for Go applications that feels like a natural extension of Go.
 
-### Why Pebble?
-Go developers often need to embed logic that can change without recompilation (e.g., business rules, plugins, dynamic configurations). Existing solutions like Lua or Starlark force developers to switch mental models (1-based indexing, Python syntax, etc.). Pebble aims to eliminate this friction.
+### Why Moxy?
+Go developers often need to embed logic that can change without recompilation (e.g., business rules, plugins, dynamic configurations). Existing solutions like Lua or Starlark force developers to switch mental models (1-based indexing, Python syntax, etc.). Moxy aims to eliminate this friction.
 
-| Feature | Pebble | Lua | Starlark | Embedded Go (Yaegi) |
+| Feature | Moxy | Lua | Starlark | Embedded Go (Yaegi) |
 |---------|--------|-----|----------|---------------------|
 | **Syntax** | Go-like | C-like/Unique | Python-like | Full Go |
 | **Indexing**| 0-based | 1-based | 0-based | 0-based |
@@ -19,7 +19,7 @@ Go developers often need to embed logic that can change without recompilation (e
 
 ## 2. Syntax Design (v1.0)
 
-To ensure consistency and developer ergonomics for Go programmers, Pebble will follow these rules:
+To ensure consistency and developer ergonomics for Go programmers, Moxy will follow these rules:
 
 ### 2.1 Variables
 - **`var x = 10`**: Standard declaration.
@@ -88,11 +88,11 @@ func is_fraudulent(tx) {
 ## 5. Next Steps
 1.  **Standardize Parser**: Fully migrate internal AST names to Go-style (e.g., `LetStatement` -> `VarStatement`).
 2.  **Map Support**: Implement Go-like maps `{key: value}`.
-3.  **Go Interop**: Create a high-level `pebble.Run(script)` helper that maps Go structs to Pebble values.
+3.  **Go Interop**: Create a high-level `moxy.Run(script)` helper that maps Go structs to Moxy values.
 4.  **Error Handling**: Go-style `val, err := ...` patterns.
 
 ## 6. What NOT to Build (Yet)
 - **Package Manager**: Overkill for an embedded language. Scripts should be small and self-contained.
-- **Classes/OOP**: Go is composition-over-inheritance; Pebble should be too.
+- **Classes/OOP**: Go is composition-over-inheritance; Moxy should be too.
 - **Generics**: Complexity doesn't justify the cost for scripting use cases.
 - **JIT**: Focus on a fast, predictable bytecode VM first.

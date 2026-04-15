@@ -1,7 +1,7 @@
 package lexer
 
 import (
-	"pebble/internal/token"
+	"github.com/pannagaperumal/moxy/internal/token"
 	"strings"
 )
 

@@ -1,6 +1,6 @@
 package vm
 
-import "pebble/object"
+import "github.com/pannagaperumal/moxy/object"
 
 type Frame struct {
 	cl          *object.Closure

@@ -1,8 +1,8 @@
 package evaluator
 
 import (
-	"pebble/ast"
-	"pebble/object"
+	"github.com/pannagaperumal/moxy/ast"
+	"github.com/pannagaperumal/moxy/object"
 )
 
 func evalPrefixExpression(operator string, right object.Object) object.Object {

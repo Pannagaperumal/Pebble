@@ -1,24 +1,24 @@
-package pebble
+package moxy
 
 import (
 	"fmt"
 	"io"
 	"os"
-	"pebble/internal/compiler"
-	"pebble/internal/evaluator"
-	"pebble/internal/lexer"
-	"pebble/internal/parser"
-	"pebble/internal/vm"
-	"pebble/object"
+	"github.com/pannagaperumal/moxy/internal/compiler"
+	"github.com/pannagaperumal/moxy/internal/evaluator"
+	"github.com/pannagaperumal/moxy/internal/lexer"
+	"github.com/pannagaperumal/moxy/internal/parser"
+	"github.com/pannagaperumal/moxy/internal/vm"
+	"github.com/pannagaperumal/moxy/object"
 )
 
-// State represents the state of a Pebble interpreter instance.
+// State represents the state of a Moxy interpreter instance.
 // Similar to lua_State.
 type State struct {
 	Env *object.Environment
 }
 
-// New creates a new Pebble interpreter state with built-ins registered.
+// New creates a new Moxy interpreter state with built-ins registered.
 func New() *State {
 	return &State{
 		Env: object.NewEnvironment(),
@@ -74,7 +74,7 @@ func (s *State) GetLastPopped(v *vm.VM) object.Object {
 	return v.LastPoppedStackElem()
 }
 
-// RunFile reads and executes a Pebble script file.
+// RunFile reads and executes a Moxy script file.
 func (s *State) RunFile(path string) (object.Object, error) {
 	content, err := os.ReadFile(path)
 	if err != nil {
@@ -85,7 +85,7 @@ func (s *State) RunFile(path string) (object.Object, error) {
 
 // SetGlobal sets a global variable in the interpreter environment.
 func (s *State) SetGlobal(name string, value any) error {
-	obj := convertToPebbleObject(value)
+	obj := convertToMoxyObject(value)
 	if obj == nil {
 		return fmt.Errorf("unsupported type: %T", value)
 	}
@@ -98,7 +98,7 @@ func (s *State) GetGlobal(name string) (object.Object, bool) {
 	return s.Env.Get(name)
 }
 
-// RegisterFunction registers a Go function as a Pebble builtin.
+// RegisterFunction registers a Go function as a Moxy builtin.
 func (s *State) RegisterFunction(name string, fn func(args ...object.Object) object.Object) {
 	builtin := &object.Builtin{Fn: fn}
 
@@ -123,7 +123,7 @@ func (s *State) RegisterFunction(name string, fn func(args ...object.Object) obj
 	}
 }
 
-// Call calls a Pebble function defined in the state.
+// Call calls a Moxy function defined in the state.
 func (s *State) Call(funcName string, args ...any) (object.Object, error) {
 	fnObj, ok := s.Env.Get(funcName)
 	if !ok {
@@ -132,7 +132,7 @@ func (s *State) Call(funcName string, args ...any) (object.Object, error) {
 
 	pebbleArgs := make([]object.Object, len(args))
 	for i, arg := range args {
-		pebbleArgs[i] = convertToPebbleObject(arg)
+		pebbleArgs[i] = convertToMoxyObject(arg)
 	}
 
 	result := evaluator.ApplyFunction(fnObj, pebbleArgs)
@@ -143,8 +143,8 @@ func (s *State) Call(funcName string, args ...any) (object.Object, error) {
 	return result, nil
 }
 
-// convertToPebbleObject converts standard Go types to Pebble objects.
-func convertToPebbleObject(val any) object.Object {
+// convertToMoxyObject converts standard Go types to Moxy objects.
+func convertToMoxyObject(val any) object.Object {
 	switch v := val.(type) {
 	case object.Object:
 		return v
@@ -167,14 +167,14 @@ func convertToPebbleObject(val any) object.Object {
 		pairs := make(map[object.HashKey]object.HashPair)
 		for k, val := range v {
 			key := &object.String{Value: k}
-			pVal := convertToPebbleObject(val)
+			pVal := convertToMoxyObject(val)
 			pairs[key.HashKey()] = object.HashPair{Key: key, Value: pVal}
 		}
 		return &object.Hash{Pairs: pairs}
 	case []any:
 		elements := make([]object.Object, len(v))
 		for i, val := range v {
-			elements[i] = convertToPebbleObject(val)
+			elements[i] = convertToMoxyObject(val)
 		}
 		return &object.Array{Elements: elements}
 	default:

@@ -1,9 +1,9 @@
-# Pebble Language Roadmap
+# Moxy Language Roadmap
 ---
 
 ## Vision
 
-Pebble aims to become a **high-performance embeddable scripting language written in Go**, focused on:
+Moxy aims to become a **high-performance embeddable scripting language written in Go**, focused on:
 
 - Performance-first architecture
 - Clean and expressive syntax
@@ -41,7 +41,7 @@ Success Criteria:
 ## Embedding API
 
 ```go
-vm := pebble.NewVM()
+vm := moxy.NewVM()
 vm.RegisterFunction("log", myLogger)
 vm.ExecuteFile("config.pb")
 value := vm.GetGlobal("result")
@@ -51,7 +51,7 @@ value := vm.GetGlobal("result")
 
 - [ ] Stable VM API  
 - [ ] Register Go functions  
-- [ ] Call Pebble from Go  
+- [ ] Call Moxy from Go  
 - [ ] Sandbox execution mode  
 - [ ] Timeout and memory limits  
 - [x] REPL  
@@ -75,10 +75,10 @@ value := vm.GetGlobal("result")
 - [ ] Collection helpers  
 
 ### CLI
-- [x] pebble run  
-- [ ] pebble fmt  
-- [ ] pebble test  
-- [ ] pebble build  
+- [x] moxy run  
+- [ ] moxy fmt  
+- [ ] moxy test  
+- [ ] moxy build  
 
 ---
 

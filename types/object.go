@@ -1,10 +1,11 @@
-package object
+package types
 
 import (
 	"bytes"
 	"fmt"
-	"pebble/ast"
 	"strings"
+
+	"github.com/pannagaperumal/moxy/ast"
 )
 
 type ObjectType string

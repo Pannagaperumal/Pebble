@@ -2,8 +2,8 @@ package parser
 
 import (
 	"fmt"
-	"pebble/ast"
-	"pebble/internal/token"
+	"github.com/pannagaperumal/moxy/ast"
+	"github.com/pannagaperumal/moxy/internal/token"
 	"strconv"
 )
 

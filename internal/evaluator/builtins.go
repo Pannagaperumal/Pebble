@@ -2,7 +2,7 @@ package evaluator
 
 import (
 	"fmt"
-	"pebble/object"
+	"github.com/pannagaperumal/moxy/object"
 )
 
 var Builtins = map[string]*object.Builtin{

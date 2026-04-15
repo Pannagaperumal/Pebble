@@ -2,8 +2,8 @@ package evaluator
 
 import (
 	"fmt"
-	"pebble/ast"
-	"pebble/object"
+	"github.com/pannagaperumal/moxy/ast"
+	"github.com/pannagaperumal/moxy/object"
 )
 
 var (

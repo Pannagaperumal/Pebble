@@ -1,26 +1,26 @@
-# Pebble Plugin System
+# Moxy Plugin System
 
-Pebble is designed to be easily embeddable, making it an ideal choice for a plugin language in Go applications. This document outlines how to implement and use a plugin system with Pebble.
+Moxy is designed to be easily embeddable, making it an ideal choice for a plugin language in Go applications. This document outlines how to implement and use a plugin system with Moxy.
 
 ## 1. The Core Architecture
 
-A Pebble-based plugin system consists of two parts:
+A Moxy-based plugin system consists of two parts:
 - **The Host (Go)**: The application that provides the environment, executes scripts, and triggers events.
-- **The Plugin (Pebble)**: A script (traditionally with a `.pb` extension) that implements custom logic.
+- **The Plugin (Moxy)**: A script (traditionally with a `.pb` extension) that implements custom logic.
 
 ## 2. Host Implementation (Go)
 
-The simplest way to host Pebble is using the high-level API which provides a `State` manager (Lua-style).
+The simplest way to host Moxy is using the high-level API which provides a `State` manager (Lua-style).
 
 ### A. Initialize and Register Functions
-Expose Go functions to the Pebble scripts so they can interact with your application.
+Expose Go functions to the Moxy scripts so they can interact with your application.
 
 ```go
-import "pebble"
+import "moxy"
 
-L := pebble.New()
+L := moxy.New()
 
-// Register a Go function as a builtin in Pebble
+// Register a Go function as a builtin in Moxy
 L.RegisterFunction("notify_host", func(args ...object.Object) object.Object {
     fmt.Printf("Plugin says: %s\n", args[0].Inspect())
     return object.NULL
@@ -36,10 +36,10 @@ _, err := L.RunFile("./plugins/my_plugin.pb")
 ```
 
 ### C. Trigger Hooks
-When events occur in your Go application, you can call specific functions defined in the Pebble script.
+When events occur in your Go application, you can call specific functions defined in the Moxy script.
 
 ```go
-// Pass a Go map as an argument; it will be converted to a Pebble Hash
+// Pass a Go map as an argument; it will be converted to a Moxy Hash
 eventData := map[string]any{"user": "alice", "action": "login"}
 
 result, err := L.Call("on_event", eventData)
@@ -48,7 +48,7 @@ if err != nil {
 }
 ```
 
-## 3. Plugin Implementation (Pebble)
+## 3. Plugin Implementation (Moxy)
 
 The Plugin script implements the logic that the host expects.
 
@@ -84,7 +84,7 @@ By default, it searches for `.pb` files in `./examples/plugin_example/plugins`. 
 ./plugin_host -dir ./my_plugins
 ```
 
-## 5. Why Use Pebble?
+## 5. Why Use Moxy?
 
 1. **Safety**: Scripts run in a sandboxed environment; they can only call functions you explicitly provide.
 2. **Familiarity**: Go developers don't need to learn a new syntax.

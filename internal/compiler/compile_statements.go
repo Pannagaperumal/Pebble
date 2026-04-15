@@ -1,9 +1,9 @@
 package compiler
 
 import (
-	"pebble/ast"
-	"pebble/internal/code"
-	"pebble/internal/symbol"
+	"github.com/pannagaperumal/moxy/ast"
+	"github.com/pannagaperumal/moxy/internal/code"
+	"github.com/pannagaperumal/moxy/internal/symbol"
 )
 
 func (c *Compiler) compileProgram(node *ast.Program) error {

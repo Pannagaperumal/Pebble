@@ -5,15 +5,15 @@ import (
 	"fmt"
 	"io/ioutil"
 	"path/filepath"
-	"pebble" // Using the high-level API
-	"pebble/object"
+	"github.com/pannagaperumal/moxy" // Using the high-level API
+	"github.com/pannagaperumal/moxy/object"
 )
 
 func main() {
 	pluginsDir := flag.String("dir", "./examples/plugin_example/plugins", "Directory to search for .pb plugins")
 	flag.Parse()
 
-	fmt.Printf("=== Pebble Lua-style Plugin Host (Directory: %s) ===\n", *pluginsDir)
+	fmt.Printf("=== Moxy Lua-style Plugin Host (Directory: %s) ===\n", *pluginsDir)
 
 	// 1. Discover plugins
 	files, err := ioutil.ReadDir(*pluginsDir)
@@ -27,7 +27,7 @@ func main() {
 			path := filepath.Join(*pluginsDir, file.Name())
 
 			// 2. Load and run like Lua
-			L := pebble.New()
+			L := moxy.New()
 
 			// Register host functions
 			L.RegisterFunction("notify_host", func(args ...object.Object) object.Object {

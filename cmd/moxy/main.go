@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"os"
 	"os/user"
-	"pebble/internal/lexer"
-	"pebble/internal/parser"
-	"pebble/internal/repl"
+	"github.com/pannagaperumal/moxy/internal/lexer"
+	"github.com/pannagaperumal/moxy/internal/parser"
+	"github.com/pannagaperumal/moxy/internal/repl"
 )
 
 var (
@@ -32,7 +32,7 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	fmt.Printf("Hello %s! This is the Pebble programming language!\n",
+	fmt.Printf("Hello %s! This is the Moxy programming language!\n",
 		user.Username)
 	fmt.Printf("Feel free to type in commands\n")
 	repl.Start(os.Stdin, os.Stdout)
