@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"os"
 	"os/user"
-	"pebble/package/lexer"
-	"pebble/package/parser"
-	"pebble/package/repl"
+	"pebble/internal/lexer"
+	"pebble/internal/parser"
+	"pebble/internal/repl"
 )
 
 var (

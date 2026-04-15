@@ -1,94 +1,115 @@
 # 🪨 Pebble
 
-**Pebble** is a lightweight, interpreted programming language designed for simplicity and extensibility. Built from the ground up in Go. It is designed for **simplicity, performance, and embeddability**. Pebble aims to evolve into a **high-performance embeddable scripting and configuration language for Go applications**.
+**The Scripting Language Go Developers Already Know.**
+
+Pebble is a high-performance, sandboxed scripting language designed specifically for embedding in Go applications. It combines the simplicity of Go with the flexibility of a dynamic scripting engine.
 
 ---
 
-## 🚀 Vision
+## 🚀 Why Pebble?
 
-Pebble is not just another scripting language.
+If you are a Go developer, you've likely faced the "scripting dilemma":
+*   **Lua** is fast but has `1-based` indexing and non-Go syntax.
+*   **Starlark** is safe but restrictive (no recursion) and Python-based.
+*   **Embedded Go** is powerful but complex to sandbox and heavy.
 
-It is being designed to become:
+**Pebble** bridges this gap by providing a **Go-native VM** that uses a syntax you already know.
 
-> A fast, embeddable scripting and configuration engine for Go systems.
+### Core Value Proposition
+- **Go-Like Syntax**: `func`, `var`, `:=`, and `0-based` indexing.
+- **Fast Bytecode VM**: Compiles to bytecode for high performance without JIT overhead.
+- **Pure Go**: Zero-dependency embedding. No CGO.
+- **Safely Sandboxed**: Controlled execution environment for plugins and rules engines.
 
-Long-term goals include:
-- High-performance bytecode VM
-- Safe sandbox execution
-- First-class Go embedding API
-- Modular architecture
-- Clean and expressive syntax
+---
 
-Curious about how its fast (read: docs/vm_architecture.md)
+## 🛠 Usage
 
-## Features
-- **Variables**: `var x = 10;`
-- **Data Types**: Integers, Booleans, Strings, Functions, Arrays, Hash Maps.
-- **Control Flow**: `if/else`, `while`, `for`.
-- **Functions**: `fn(x) { return x + 1; }`
-- **Built-ins**: `print()`, `len()`.
-- **Embeddable**: Can be used as a scripting language for Go applications.
+### In your Go project
+```go
+import "github.com/yourusername/pebble/package/vm"
+import "github.com/yourusername/pebble/package/compiler"
 
-### When to Choose Pebble VM
-1. **Embedded Systems**: Small footprint and fast startup
-2. **High-performance Scripting**: When speed matters
-3. **Go Integration**: Seamless embedding in Go applications
-4. **Resource-constrained Environments**: Low memory/CPU usage
-5. **Predictable Performance**: No JIT warm-up or GC pauses
-
-
-## Installation
-Ensure you have Go installed.
-```bash
-git clone https://github.com/yourusername/pebble.git
-cd pebble
+func main() {
+    p := parser.New(lexer.New("x := 10; return x + 5;"))
+    prog := p.ParseProgram()
+    
+    comp := compiler.New()
+    bytecode := comp.Compile(prog)
+    
+    machine := vm.New(bytecode)
+    machine.Run()
+    
+    result := machine.LastPoppedStackElem()
+    fmt.Println(result) // 15
+}
 ```
 
-## Architecture
-```mermaid
-graph LR
-    A[Source Code] -->|Lexer| B[Tokens]
-    B -->|Parser| C[AST]
-    C -->|Compiler| D[Bytecode]
-    D -->|VM| E[Execution]
-```
-## Usage
-
-### USE THE EXECUTABLE (directly Go not required)
+### CLI
 ```bash
 ./pebble examples/demo.pb
 ```
 
-### REPL
-Start the interactive Read-Eval-Print-Loop:
-```bash
-go run cmd/pebble/main.go
+---
+
+## 📋 Language Specification (v1.0)
+
+| Feature | Syntax |
+|---------|--------|
+| **Variables** | `var x = 1` or `x := 1` |
+| **Functions** | `func add(a, b) { return a + b }` |
+| **Loops** | `while condition { ... }` (Go-style `for` coming soon) |
+| **Conditions**| `if x > 10 { ... } else { ... }` |
+| **Data Types**| `int`, `string`, `bool`, `array`, `map` |
+
+---
+
+## 🌟 Practical Examples
+
+### 1. Business Rule Engine
+```go
+// discount_rules.pb
+func calculate_discount(order) {
+    if order.total > 500 {
+        return order.total * 0.1 // 10% off
+    }
+    return 0
+}
 ```
 
-### Running Scripts
-Run a Pebble script file:
-```bash
-go run cmd/pebble/main.go examples/demo.pb
+### 2. Plugin System
+```go
+// filter.pb
+func process(event) {
+    if event.type == "metric" && event.value < 0 {
+        return null // drop invalid metrics
+    }
+    return event
+}
 ```
 
-## Next Steps
+---
 
-Pebble is evolving! Here are the planned functionalities to transform it into a mid-level programming language:
+## ⚖️ Comparison
 
-### Core Language Features
-- **Advanced Control Flow**: `switch` statements, and `break`/`continue` support.
-- **Structs & Methods**: Custom data types and object-oriented patterns for better data modeling.
-- **Modules & Imports**: Support for multi-file projects and code reuse.
+| | Pebble | Lua | Starlark |
+|---|---|---|---|
+| **Syntax** | **Go** | Pascal/C | Python |
+| **Indexing** | **0-based** | 1-based | 0-based |
+| **Implementation** | **Pure Go** | C (GopherLua is Go) | Go/Java |
+| **Performance** | **High** | Extreme (C) | Moderate |
 
-### Advanced Capabilities
-- **Concurrency**: Lightweight threads (fibers/goroutines) and channels for parallel execution.
-- **FFI (Foreign Function Interface)**: Ability to call Go or C functions directly from Pebble.
-- **Bytecode Compiler & VM**: Performance optimizations through compilation to bytecode and a dedicated stack-based Virtual Machine. This approach can provide 10-50x performance improvements over the current tree-walk interpreter by reducing overhead and enabling better optimization opportunities. The implementation will maintain the existing AST evaluator logic while adding a compilation step to bytecode.
+---
 
-### Ecosystem & Tooling
-- **Standard Library**: Expanded built-in functions for Networking (HTTP), JSON/YAML parsing, and Math utilities.
-- **Package Manager**: A dedicated tool for managing dependencies and modules.
-- **LSP Support**: Language Server Protocol implementation for IDE integration (VS Code, etc.).
-- **Testing Framework**: Built-in support for unit and integration tests.
-- **Improved Error Handling**: Detailed error messages with line and column information for easier debugging.
+## 🛤 Roadmap
 
+1.  **Phase 1 (Current)**: VM and Bytecode foundations.
+2.  **Phase 2**: Standardize syntax (`func` and `:=` enforcement).
+3.  **Phase 3**: Standard library (JSON, Math, Time).
+4.  **Phase 4**: Concurrency-lite (channels and fibers).
+
+---
+
+## 🤝 Contributing
+
+We are in early development! Feel free to open issues or PRs. Read our [CONTRIBUTING.md](CONTRIBUTING.md) to get started.

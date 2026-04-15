@@ -22,12 +22,12 @@ Replace AST tree-walk interpreter with Bytecode + Virtual Machine.
 
 ### Tasks
 
-- [ ] Define instruction set  
-- [ ] Implement constant pool  
-- [ ] Design stack-based VM  
-- [ ] AST → Bytecode compiler  
-- [ ] Indexed local variable system  
-- [ ] Tagged value system  
+- [x] Define instruction set  
+- [x] Implement constant pool  
+- [x] Design stack-based VM  
+- [x] AST → Bytecode compiler  
+- [x] Indexed local variable system  
+- [x] Tagged value system  
 - [ ] Mark-and-sweep GC  
 - [ ] Benchmark AST vs VM  
 
@@ -54,8 +54,8 @@ value := vm.GetGlobal("result")
 - [ ] Call Pebble from Go  
 - [ ] Sandbox execution mode  
 - [ ] Timeout and memory limits  
-- [ ] REPL  
-- [ ] Improved error diagnostics  
+- [x] REPL  
+- [x] Improved error diagnostics  
 
 ---
 
@@ -75,7 +75,7 @@ value := vm.GetGlobal("result")
 - [ ] Collection helpers  
 
 ### CLI
-- [ ] pebble run  
+- [x] pebble run  
 - [ ] pebble fmt  
 - [ ] pebble test  
 - [ ] pebble build  
