@@ -2,18 +2,19 @@ package evaluator
 
 import (
 	"fmt"
+
 	"github.com/pannagaperumal/moxy/ast"
-	"github.com/pannagaperumal/moxy/object"
+	"github.com/pannagaperumal/moxy/types"
 )
 
-func nativeBoolToBooleanObject(input bool) *object.Boolean {
+func nativeBoolToBooleanObject(input bool) *types.Boolean {
 	if input {
 		return TRUE
 	}
 	return FALSE
 }
 
-func isTruthy(obj object.Object) bool {
+func isTruthy(obj types.Object) bool {
 	switch obj {
 	case NULL:
 		return false
@@ -26,24 +27,24 @@ func isTruthy(obj object.Object) bool {
 	}
 }
 
-func newError(format string, a ...interface{}) *object.Error {
-	return &object.Error{Message: fmt.Sprintf(format, a...)}
+func newError(format string, a ...interface{}) *types.Error {
+	return &types.Error{Message: fmt.Sprintf(format, a...)}
 }
 
-func isError(obj object.Object) bool {
+func isError(obj types.Object) bool {
 	if obj != nil {
-		return obj.Type() == object.ERROR_OBJ
+		return obj.Type() == types.ERROR_OBJ
 	}
 	return false
 }
 
-func evalExpressions(exps []ast.Expression, env *object.Environment) []object.Object {
-	var result []object.Object
+func evalExpressions(exps []ast.Expression, env *types.Environment) []types.Object {
+	var result []types.Object
 
 	for _, e := range exps {
 		evaluated := Eval(e, env)
 		if isError(evaluated) {
-			return []object.Object{evaluated}
+			return []types.Object{evaluated}
 		}
 		result = append(result, evaluated)
 	}
@@ -51,15 +52,15 @@ func evalExpressions(exps []ast.Expression, env *object.Environment) []object.Ob
 	return result
 }
 
-func unwrapReturnValue(obj object.Object) object.Object {
-	if returnValue, ok := obj.(*object.ReturnValue); ok {
+func unwrapReturnValue(obj types.Object) types.Object {
+	if returnValue, ok := obj.(*types.ReturnValue); ok {
 		return returnValue.Value
 	}
 	return obj
 }
 
-func extendFunctionEnv(fn *object.Function, args []object.Object) *object.Environment {
-	env := object.NewEnclosedEnvironment(fn.Env)
+func extendFunctionEnv(fn *types.Function, args []types.Object) *types.Environment {
+	env := types.NewEnclosedEnvironment(fn.Env)
 
 	for i, param := range fn.Parameters {
 		env.Set(param.Value, args[i])

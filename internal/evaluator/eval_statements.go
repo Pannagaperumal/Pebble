@@ -2,19 +2,19 @@ package evaluator
 
 import (
 	"github.com/pannagaperumal/moxy/ast"
-	"github.com/pannagaperumal/moxy/object"
+	"github.com/pannagaperumal/moxy/types"
 )
 
-func evalProgram(program *ast.Program, env *object.Environment) object.Object {
-	var result object.Object
+func evalProgram(program *ast.Program, env *types.Environment) types.Object {
+	var result types.Object
 
 	for _, statement := range program.Statements {
 		result = Eval(statement, env)
 
 		switch result := result.(type) {
-		case *object.ReturnValue:
+		case *types.ReturnValue:
 			return result.Value
-		case *object.Error:
+		case *types.Error:
 			return result
 		}
 	}
@@ -22,15 +22,15 @@ func evalProgram(program *ast.Program, env *object.Environment) object.Object {
 	return result
 }
 
-func evalBlockStatement(block *ast.BlockStatement, env *object.Environment) object.Object {
-	var result object.Object
+func evalBlockStatement(block *ast.BlockStatement, env *types.Environment) types.Object {
+	var result types.Object
 
 	for _, statement := range block.Statements {
 		result = Eval(statement, env)
 
 		if result != nil {
 			rt := result.Type()
-			if rt == object.RETURN_VALUE_OBJ || rt == object.ERROR_OBJ {
+			if rt == types.RETURN_VALUE_OBJ || rt == types.ERROR_OBJ {
 				return result
 			}
 		}
@@ -39,8 +39,8 @@ func evalBlockStatement(block *ast.BlockStatement, env *object.Environment) obje
 	return result
 }
 
-func evalWhileExpression(we *ast.WhileExpression, env *object.Environment) object.Object {
-	var result object.Object = NULL
+func evalWhileExpression(we *ast.WhileExpression, env *types.Environment) types.Object {
+	var result types.Object = NULL
 
 	for {
 		condition := Eval(we.Condition, env)
@@ -54,24 +54,24 @@ func evalWhileExpression(we *ast.WhileExpression, env *object.Environment) objec
 		if isError(result) {
 			return result
 		}
-		if result != nil && result.Type() == object.RETURN_VALUE_OBJ {
+		if result != nil && result.Type() == types.RETURN_VALUE_OBJ {
 			return result
 		}
 	}
 	return result
 }
 
-func evalForStatement(fs *ast.ForStatement, env *object.Environment) object.Object {
+func evalForStatement(fs *ast.ForStatement, env *types.Environment) types.Object {
 	// Create a new environment for the for loop if it has an init statement
-	var evaluationEnv *object.Environment
+	var evaluationEnv *types.Environment
 	if fs.Init != nil {
-		evaluationEnv = object.NewEnclosedEnvironment(env)
+		evaluationEnv = types.NewEnclosedEnvironment(env)
 		Eval(fs.Init, evaluationEnv)
 	} else {
 		evaluationEnv = env
 	}
 
-	var result object.Object = NULL
+	var result types.Object = NULL
 
 	for {
 		if fs.Condition != nil {
@@ -88,7 +88,7 @@ func evalForStatement(fs *ast.ForStatement, env *object.Environment) object.Obje
 		if isError(result) {
 			return result
 		}
-		if result != nil && result.Type() == object.RETURN_VALUE_OBJ {
+		if result != nil && result.Type() == types.RETURN_VALUE_OBJ {
 			return result
 		}
 

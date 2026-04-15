@@ -5,8 +5,9 @@ import (
 	"fmt"
 	"io/ioutil"
 	"path/filepath"
+
 	"github.com/pannagaperumal/moxy" // Using the high-level API
-	"github.com/pannagaperumal/moxy/object"
+	"github.com/pannagaperumal/moxy/types"
 )
 
 func main() {
@@ -30,11 +31,11 @@ func main() {
 			L := moxy.New()
 
 			// Register host functions
-			L.RegisterFunction("notify_host", func(args ...object.Object) object.Object {
+			L.RegisterFunction("notify_host", func(args ...types.Object) types.Object {
 				if len(args) > 0 {
 					fmt.Printf("  [Host Notification]: %s\n", args[0].Inspect())
 				}
-				return object.NULL
+				return types.NULL
 			})
 
 			// Run the script

@@ -2,10 +2,11 @@ package compiler
 
 import (
 	"fmt"
+
 	"github.com/pannagaperumal/moxy/ast"
 	"github.com/pannagaperumal/moxy/internal/code"
-	"github.com/pannagaperumal/moxy/object"
 	"github.com/pannagaperumal/moxy/internal/symbol"
+	"github.com/pannagaperumal/moxy/types"
 )
 
 func (c *Compiler) compileInfixExpression(node *ast.InfixExpression) error {
@@ -196,7 +197,7 @@ func (c *Compiler) compileFunctionLiteral(node *ast.FunctionLiteral) error {
 	}
 
 	// Create compiled function
-	compiledFn := &object.CompiledFunction{
+	compiledFn := &types.CompiledFunction{
 		Instructions:  instructions,
 		NumLocals:     numLocals,
 		NumParameters: len(node.Parameters),

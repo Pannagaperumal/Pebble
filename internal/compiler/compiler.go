@@ -5,18 +5,18 @@ import (
 
 	"github.com/pannagaperumal/moxy/ast"
 	"github.com/pannagaperumal/moxy/internal/code"
-	"github.com/pannagaperumal/moxy/object"
 	"github.com/pannagaperumal/moxy/internal/symbol"
+	"github.com/pannagaperumal/moxy/types"
 )
 
 type Bytecode struct {
 	Instructions code.Instructions
-	Constants    []object.Object
+	Constants    []types.Object
 }
 
 type Compiler struct {
 	instructions        code.Instructions
-	constants           []object.Object
+	constants           []types.Object
 	lastInstruction     EmittedInstruction
 	previousInstruction EmittedInstruction
 	scope               CompilationScope
@@ -45,13 +45,13 @@ func New() *Compiler {
 
 	symbolTable := NewSymbolTable()
 
-	for i, v := range object.Builtins {
+	for i, v := range types.Builtins {
 		symbolTable.DefineBuiltin(i, v.Name)
 	}
 
 	return &Compiler{
 		instructions: code.Instructions{},
-		constants:    []object.Object{},
+		constants:    []types.Object{},
 		scopes:       []CompilationScope{mainScope},
 		scopeIndex:   0,
 		symbolTable:  symbolTable,
@@ -78,7 +78,7 @@ func (c *Compiler) Compile(node ast.Node) error {
 	case *ast.InfixExpression:
 		return c.compileInfixExpression(node)
 	case *ast.IntegerLiteral:
-		integer := &object.Integer{Value: node.Value}
+		integer := &types.Integer{Value: node.Value}
 		c.emit(code.OpConstant, c.addConstant(integer))
 	case *ast.Boolean:
 		if node.Value {
@@ -101,7 +101,7 @@ func (c *Compiler) Compile(node ast.Node) error {
 		}
 		c.loadSymbol(symbol)
 	case *ast.StringLiteral:
-		str := &object.String{Value: node.Value}
+		str := &types.String{Value: node.Value}
 		c.emit(code.OpConstant, c.addConstant(str))
 	case *ast.ArrayLiteral:
 		return c.compileArrayLiteral(node)
@@ -199,7 +199,7 @@ func (c *Compiler) changeOperand(opPos int, operand int) {
 	c.replaceInstruction(opPos, newInstruction)
 }
 
-func (c *Compiler) addConstant(obj object.Object) int {
+func (c *Compiler) addConstant(obj types.Object) int {
 	c.constants = append(c.constants, obj)
 	return len(c.constants) - 1
 }

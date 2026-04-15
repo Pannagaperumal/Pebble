@@ -1,14 +1,14 @@
 package vm
 
-import "github.com/pannagaperumal/moxy/object"
+import "github.com/pannagaperumal/moxy/types"
 
 type Frame struct {
-	cl          *object.Closure
+	cl          *types.Closure
 	ip          int
 	basePointer int
 }
 
-func NewFrame(cl *object.Closure, basePointer int) *Frame {
+func NewFrame(cl *types.Closure, basePointer int) *Frame {
 	return &Frame{
 		cl:          cl,
 		ip:          -1,

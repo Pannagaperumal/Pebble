@@ -3,16 +3,16 @@ package evaluator
 import (
 	"fmt"
 	"github.com/pannagaperumal/moxy/ast"
-	"github.com/pannagaperumal/moxy/object"
+	"github.com/pannagaperumal/moxy/types"
 )
 
 var (
-	NULL  = &object.Null{}
-	TRUE  = &object.Boolean{Value: true}
-	FALSE = &object.Boolean{Value: false}
+	NULL  = &types.Null{}
+	TRUE  = &types.Boolean{Value: true}
+	FALSE = &types.Boolean{Value: false}
 )
 
-func Eval(node ast.Node, env *object.Environment) object.Object {
+func Eval(node ast.Node, env *types.Environment) types.Object {
 	switch node := node.(type) {
 
 	// Statements
@@ -30,7 +30,7 @@ func Eval(node ast.Node, env *object.Environment) object.Object {
 		if isError(val) {
 			return val
 		}
-		return &object.ReturnValue{Value: val}
+		return &types.ReturnValue{Value: val}
 
 	case *ast.VarStatement:
 		val := Eval(node.Value, env)
@@ -44,13 +44,13 @@ func Eval(node ast.Node, env *object.Environment) object.Object {
 
 	// Expressions
 	case *ast.IntegerLiteral:
-		return &object.Integer{Value: node.Value}
+		return &types.Integer{Value: node.Value}
 
 	case *ast.FloatLiteral:
-		return &object.Float{Value: node.Value}
+		return &types.Float{Value: node.Value}
 
 	case *ast.StringLiteral:
-		return &object.String{Value: node.Value}
+		return &types.String{Value: node.Value}
 
 	case *ast.Boolean:
 		return nativeBoolToBooleanObject(node.Value)
@@ -85,7 +85,7 @@ func Eval(node ast.Node, env *object.Environment) object.Object {
 	case *ast.FunctionLiteral:
 		params := node.Parameters
 		body := node.Body
-		return &object.Function{Parameters: params, Env: env, Body: body}
+		return &types.Function{Parameters: params, Env: env, Body: body}
 
 	case *ast.CallExpression:
 		function := Eval(node.Function, env)
@@ -107,7 +107,7 @@ func Eval(node ast.Node, env *object.Environment) object.Object {
 		if len(elements) == 1 && isError(elements[0]) {
 			return elements[0]
 		}
-		return &object.Array{Elements: elements}
+		return &types.Array{Elements: elements}
 
 	case *ast.HashLiteral:
 		return evalHashLiteral(node, env)
@@ -126,20 +126,20 @@ func Eval(node ast.Node, env *object.Environment) object.Object {
 	return nil
 }
 
-func ApplyFunction(fn object.Object, args []object.Object) object.Object {
+func ApplyFunction(fn types.Object, args []types.Object) types.Object {
 	switch fn := fn.(type) {
-	case *object.Function:
+	case *types.Function:
 		extendedEnv := extendFunctionEnv(fn, args)
 		evaluated := Eval(fn.Body, extendedEnv)
 		return unwrapReturnValue(evaluated)
 
-	case *object.Builtin:
+	case *types.Builtin:
 		return fn.Fn(args...)
 
-	case *object.Closure:
+	case *types.Closure:
 		// To call a VM-compiled function from the evaluator, we need to bridge it.
 		// For now, we return an error or implement a quick VM run.
-		return &object.Error{Message: fmt.Sprintf("cannot call VM closure from evaluator. Use State.Run() instead.")}
+		return &types.Error{Message: fmt.Sprintf("cannot call VM closure from evaluator. Use State.Run() instead.")}
 
 	default:
 		return newError("not a function: %s", fn.Type())

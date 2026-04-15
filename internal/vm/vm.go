@@ -7,7 +7,7 @@ import (
 
 	"github.com/pannagaperumal/moxy/internal/code"
 	"github.com/pannagaperumal/moxy/internal/compiler"
-	"github.com/pannagaperumal/moxy/object"
+	"github.com/pannagaperumal/moxy/types"
 )
 
 const StackSize = 2048
@@ -20,21 +20,21 @@ var (
 )
 
 type VM struct {
-	constants    []object.Object
+	constants    []types.Object
 	instructions code.Instructions
 
-	stack []object.Object
+	stack []types.Object
 	sp    int // Always points to the next value. Top of stack is stack[sp-1]
 
-	globals []object.Object
+	globals []types.Object
 
 	frames     []*Frame
 	frameIndex int
 }
 
 func New(bytecode *compiler.Bytecode) *VM {
-	mainFn := &object.CompiledFunction{Instructions: bytecode.Instructions}
-	mainClosure := &object.Closure{Fn: mainFn}
+	mainFn := &types.CompiledFunction{Instructions: bytecode.Instructions}
+	mainClosure := &types.Closure{Fn: mainFn}
 	mainFrame := NewFrame(mainClosure, 0)
 
 	frames := make([]*Frame, MaxFrames)
@@ -44,10 +44,10 @@ func New(bytecode *compiler.Bytecode) *VM {
 		instructions: bytecode.Instructions,
 		constants:    bytecode.Constants,
 
-		stack: make([]object.Object, StackSize),
+		stack: make([]types.Object, StackSize),
 		sp:    0,
 
-		globals: make([]object.Object, GlobalsSize),
+		globals: make([]types.Object, GlobalsSize),
 
 		frames:     frames,
 		frameIndex: 1,
@@ -108,11 +108,11 @@ func (vm *VM) Run() error {
 			}
 
 		case OpTrue:
-			vm.push(object.TRUE)
+			vm.push(types.TRUE)
 		case OpFalse:
-			vm.push(object.FALSE)
+			vm.push(types.FALSE)
 		case OpNull:
-			vm.push(object.NULL)
+			vm.push(types.NULL)
 
 		case OpJumpNotTruthy:
 			pos := int(binary.BigEndian.Uint16(vm.currentFrame().cl.Fn.Instructions[vm.currentFrame().ip+1:]))
@@ -185,12 +185,12 @@ func (vm *VM) Run() error {
 		case OpReturn:
 			vm.popFrame()
 			vm.pop() // Pop function from stack
-			vm.push(object.NULL)
+			vm.push(types.NULL)
 
 		case OpGetBuiltin:
 			builtinIndex := vm.currentFrame().cl.Fn.Instructions[vm.currentFrame().ip+1]
 			vm.currentFrame().ip++
-			definition := object.Builtins[builtinIndex]
+			definition := types.Builtins[builtinIndex]
 			vm.push(definition.Builtin)
 
 		case OpGetFree:
@@ -217,26 +217,26 @@ func (vm *VM) Run() error {
 
 func (vm *VM) pushClosure(constIndex int, numFree int) error {
 	constant := vm.constants[constIndex]
-	function, ok := constant.(*object.CompiledFunction)
+	function, ok := constant.(*types.CompiledFunction)
 	if !ok {
 		return fmt.Errorf("not a function: %+v", constant)
 	}
 
-	free := make([]object.Object, numFree)
+	free := make([]types.Object, numFree)
 	for i := 0; i < numFree; i++ {
 		free[i] = vm.stack[vm.sp-numFree+i]
 	}
 	vm.sp = vm.sp - numFree
 
-	closure := &object.Closure{Fn: function, FreeVariables: free}
+	closure := &types.Closure{Fn: function, FreeVariables: free}
 	return vm.push(closure)
 }
 
-func isTruthy(obj object.Object) bool {
+func isTruthy(obj types.Object) bool {
 	switch obj := obj.(type) {
-	case *object.Boolean:
+	case *types.Boolean:
 		return obj.Value
-	case *object.Null:
+	case *types.Null:
 		return false
 	default:
 		return true

@@ -21,9 +21,9 @@ import "moxy"
 L := moxy.New()
 
 // Register a Go function as a builtin in Moxy
-L.RegisterFunction("notify_host", func(args ...object.Object) object.Object {
+L.RegisterFunction("notify_host", func(args ...types.Object) types.Object {
     fmt.Printf("Plugin says: %s\n", args[0].Inspect())
-    return object.NULL
+    return types.NULL
 })
 ```
 

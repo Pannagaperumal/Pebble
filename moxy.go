@@ -9,24 +9,24 @@ import (
 	"github.com/pannagaperumal/moxy/internal/lexer"
 	"github.com/pannagaperumal/moxy/internal/parser"
 	"github.com/pannagaperumal/moxy/internal/vm"
-	"github.com/pannagaperumal/moxy/object"
+	"github.com/pannagaperumal/moxy/types"
 )
 
 // State represents the state of a Moxy interpreter instance.
 // Similar to lua_State.
 type State struct {
-	Env *object.Environment
+	Env *types.Environment
 }
 
 // New creates a new Moxy interpreter state with built-ins registered.
 func New() *State {
 	return &State{
-		Env: object.NewEnvironment(),
+		Env: types.NewEnvironment(),
 	}
 }
 
 // Run executes the code using the Evaluator (Feature-complete, best for plugins).
-func (s *State) Run(code string) (object.Object, error) {
+func (s *State) Run(code string) (types.Object, error) {
 	l := lexer.New(code)
 	p := parser.New(l)
 	program := p.ParseProgram()
@@ -37,7 +37,7 @@ func (s *State) Run(code string) (object.Object, error) {
 
 	evaluator.RegisterBuiltins(s.Env)
 	result := evaluator.Eval(program, s.Env)
-	if result != nil && result.Type() == object.ERROR_OBJ {
+	if result != nil && result.Type() == types.ERROR_OBJ {
 		return nil, fmt.Errorf("runtime error: %s", result.Inspect())
 	}
 
@@ -45,7 +45,7 @@ func (s *State) Run(code string) (object.Object, error) {
 }
 
 // RunVM executes the code using the high-performance VM (Limited support for dynamic builtins).
-func (s *State) RunVM(code string) (object.Object, error) {
+func (s *State) RunVM(code string) (types.Object, error) {
 	l := lexer.New(code)
 	p := parser.New(l)
 	program := p.ParseProgram()
@@ -70,12 +70,12 @@ func (s *State) RunVM(code string) (object.Object, error) {
 }
 
 // GetLastPopped is a helper to get the result from the VM
-func (s *State) GetLastPopped(v *vm.VM) object.Object {
+func (s *State) GetLastPopped(v *vm.VM) types.Object {
 	return v.LastPoppedStackElem()
 }
 
 // RunFile reads and executes a Moxy script file.
-func (s *State) RunFile(path string) (object.Object, error) {
+func (s *State) RunFile(path string) (types.Object, error) {
 	content, err := os.ReadFile(path)
 	if err != nil {
 		return nil, err
@@ -94,13 +94,13 @@ func (s *State) SetGlobal(name string, value any) error {
 }
 
 // GetGlobal retrieves a global variable from the interpreter environment.
-func (s *State) GetGlobal(name string) (object.Object, bool) {
+func (s *State) GetGlobal(name string) (types.Object, bool) {
 	return s.Env.Get(name)
 }
 
 // RegisterFunction registers a Go function as a Moxy builtin.
-func (s *State) RegisterFunction(name string, fn func(args ...object.Object) object.Object) {
-	builtin := &object.Builtin{Fn: fn}
+func (s *State) RegisterFunction(name string, fn func(args ...types.Object) types.Object) {
+	builtin := &types.Builtin{Fn: fn}
 
 	// Add to environment for Evaluator
 	s.Env.Set(name, builtin)
@@ -108,7 +108,7 @@ func (s *State) RegisterFunction(name string, fn func(args ...object.Object) obj
 	// Also add to the global Builtins for VM (Workaround until VM is decentralized)
 	// We check if it's already there to avoid duplicates
 	found := false
-	for _, b := range object.Builtins {
+	for _, b := range types.Builtins {
 		if b.Name == name {
 			found = true
 			break
@@ -116,27 +116,27 @@ func (s *State) RegisterFunction(name string, fn func(args ...object.Object) obj
 	}
 
 	if !found {
-		object.Builtins = append(object.Builtins, struct {
+		types.Builtins = append(types.Builtins, struct {
 			Name    string
-			Builtin *object.Builtin
+			Builtin *types.Builtin
 		}{Name: name, Builtin: builtin})
 	}
 }
 
 // Call calls a Moxy function defined in the state.
-func (s *State) Call(funcName string, args ...any) (object.Object, error) {
+func (s *State) Call(funcName string, args ...any) (types.Object, error) {
 	fnObj, ok := s.Env.Get(funcName)
 	if !ok {
 		return nil, fmt.Errorf("function %s not found", funcName)
 	}
 
-	pebbleArgs := make([]object.Object, len(args))
+	pebbleArgs := make([]types.Object, len(args))
 	for i, arg := range args {
 		pebbleArgs[i] = convertToMoxyObject(arg)
 	}
 
 	result := evaluator.ApplyFunction(fnObj, pebbleArgs)
-	if result.Type() == object.ERROR_OBJ {
+	if result.Type() == types.ERROR_OBJ {
 		return nil, fmt.Errorf("runtime error: %s", result.Inspect())
 	}
 
@@ -144,39 +144,39 @@ func (s *State) Call(funcName string, args ...any) (object.Object, error) {
 }
 
 // convertToMoxyObject converts standard Go types to Moxy objects.
-func convertToMoxyObject(val any) object.Object {
+func convertToMoxyObject(val any) types.Object {
 	switch v := val.(type) {
-	case object.Object:
+	case types.Object:
 		return v
 	case int:
-		return &object.Integer{Value: int64(v)}
+		return &types.Integer{Value: int64(v)}
 	case int64:
-		return &object.Integer{Value: v}
+		return &types.Integer{Value: v}
 	case float64:
-		return &object.Float{Value: v}
+		return &types.Float{Value: v}
 	case string:
-		return &object.String{Value: v}
+		return &types.String{Value: v}
 	case bool:
 		if v {
-			return object.TRUE
+			return types.TRUE
 		}
-		return object.FALSE
+		return types.FALSE
 	case nil:
-		return object.NULL
+		return types.NULL
 	case map[string]any:
-		pairs := make(map[object.HashKey]object.HashPair)
+		pairs := make(map[types.HashKey]types.HashPair)
 		for k, val := range v {
-			key := &object.String{Value: k}
+			key := &types.String{Value: k}
 			pVal := convertToMoxyObject(val)
-			pairs[key.HashKey()] = object.HashPair{Key: key, Value: pVal}
+			pairs[key.HashKey()] = types.HashPair{Key: key, Value: pVal}
 		}
-		return &object.Hash{Pairs: pairs}
+		return &types.Hash{Pairs: pairs}
 	case []any:
-		elements := make([]object.Object, len(v))
+		elements := make([]types.Object, len(v))
 		for i, val := range v {
 			elements[i] = convertToMoxyObject(val)
 		}
-		return &object.Array{Elements: elements}
+		return &types.Array{Elements: elements}
 	default:
 		return nil
 	}

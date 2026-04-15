@@ -5,17 +5,18 @@ import (
 	"fmt"
 	"io"
 	"os"
+
 	"github.com/pannagaperumal/moxy/internal/evaluator"
 	"github.com/pannagaperumal/moxy/internal/lexer"
-	"github.com/pannagaperumal/moxy/object"
 	"github.com/pannagaperumal/moxy/internal/parser"
+	"github.com/pannagaperumal/moxy/types"
 )
 
 const PROMPT = ">> "
 
 func Start(in io.Reader, out io.Writer) {
 	scanner := bufio.NewScanner(in)
-	env := object.NewEnvironment()
+	env := types.NewEnvironment()
 	evaluator.RegisterBuiltins(env)
 
 	for {
@@ -66,14 +67,14 @@ func RunFile(filename string, out io.Writer) {
 		return
 	}
 
-	env := object.NewEnvironment()
+	env := types.NewEnvironment()
 	evaluator.RegisterBuiltins(env)
 
 	// Evaluate the program
 	evaluated := evaluator.Eval(program, env)
 
 	// Check for evaluation errors
-	if evaluated != nil && evaluated.Type() == object.ERROR_OBJ {
+	if evaluated != nil && evaluated.Type() == types.ERROR_OBJ {
 		fmt.Fprintf(out, "Runtime error: %s\n", evaluated.Inspect())
 	}
 

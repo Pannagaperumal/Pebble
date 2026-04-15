@@ -1,8 +1,8 @@
 package vm
 
-import "github.com/pannagaperumal/moxy/object"
+import "github.com/pannagaperumal/moxy/types"
 
-func (vm *VM) push(o object.Object) error {
+func (vm *VM) push(o types.Object) error {
 	if vm.sp >= StackSize {
 		return ErrStackOverflow
 	}
@@ -13,15 +13,15 @@ func (vm *VM) push(o object.Object) error {
 	return nil
 }
 
-func (vm *VM) pop() object.Object {
+func (vm *VM) pop() types.Object {
 	if vm.sp == 0 {
-		return object.NULL
+		return types.NULL
 	}
 	o := vm.stack[vm.sp-1]
 	vm.sp--
 	return o
 }
 
-func (vm *VM) LastPoppedStackElem() object.Object {
+func (vm *VM) LastPoppedStackElem() types.Object {
 	return vm.stack[vm.sp]
 }
